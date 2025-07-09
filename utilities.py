@@ -72,6 +72,20 @@ def scan_csv(base_dir:str):
 
     return avail_csv
 
+def read_pt_from_csv(csv_path:str):
+    '''
+    从 csv 中读取 pt 文件路径
+    返回一个列表，包含所有的 pt 文件路径
+    '''
+    import pandas as pd
+    df = pd.read_csv(csv_path)
+    if "name" in df.columns:
+        avail_pt = df["name"].tolist()
+        return avail_pt
+    else:
+        raise ValueError("CSV file must contain a 'name' column with pt file paths.")
+
+
 def test():
 #     base_dir = "D:\\NYU_Files\\2025 SPRING\\Summer_Research\\新\\PYTHON\\QWEN\\COMPRESS_COMPETITION\\packed\\"
 #     file_name = "dummy.pt"

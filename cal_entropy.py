@@ -18,20 +18,27 @@ def cal_entropy(pt_path:str,bins:int=256) -> float:
     :param bins: 直方图的bin数，默认为256
     :return: dict: 名称和对应的熵值
     """
-    name = os.path.basename(pt_path)
-    pt_array = read_pt(pt_path)
-    if not isinstance(pt_array, np.ndarray):
-        raise TypeError("pt_array must be a numpy array")
-    
-    hist, _ = np.histogram(pt_array, bins=bins, density=False)
-    prob = hist / np.sum(hist)
-    prob = prob[prob > 0]
-    entropy = -np.sum(prob * np.log2(prob))
-    
-    return {
-        "name":name, 
-        "entorpy":entropy
-        }
+    try:
+        name = os.path.basename(pt_path)
+        pt_array = read_pt(pt_path)
+        if not isinstance(pt_array, np.ndarray):
+            raise TypeError("pt_array must be a numpy array")
+        
+        hist, _ = np.histogram(pt_array, bins=bins, density=False)
+        prob = hist / np.sum(hist)
+        prob = prob[prob > 0]
+        entropy = -np.sum(prob * np.log2(prob))
+        
+        return {
+            "name":name, 
+            "entorpy":entropy
+            }
+    except Exception as e:
+        print(e)
+        return {
+            "name":None, 
+            "entorpy":None
+            }
 
 def local_test():
     """

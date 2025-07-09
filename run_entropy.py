@@ -9,13 +9,14 @@ import multiprocessing
 import traceback
 
 from cal_entropy import cal_entropy
-from utilities import scan_pt
+from utilities import read_pt_from_csv
 from ErrorLogger import ErrorLogger 
 
 
 
 
 def main():
+    BASE_DIR = "/gpfsnyu/scratch/zg2598/Qwen/OUT/COMMUNICATION_LOG/"
     Logger = ErrorLogger()
 
     print("total cpu:", multiprocessing.cpu_count())
@@ -27,11 +28,9 @@ def main():
         print("running on hpc")
         
     # base_dir = "D:\\NYU_Files\\2025 SPRING\\Summer_Research\\新\\PYTHON\\QWEN\\dummy_files" if (not torch.cuda.is_available) else "/gpfsnyu/scratch/zg2598/Qwen/OUT/COMMUNICATION_LOG/"
-    base_dir = "D:\\NYU_Files\\2025 SPRING\\Summer_Research\\新\\PYTHON\\QWEN\\dummy_files" if (not torch.cuda.is_available()) else "/gpfsnyu/scratch/zg2598/Qwen/OUT/COMMUNICATION_LOG/"
-    print(f"working on: {base_dir}")
-    avail_pt = scan_pt(base_dir=base_dir)
-    
-    print(f"{len(avail_pt)} files found...")
+    pt_csv_path = "./DATA/006_failed_to_compress.csv"
+    avail_pt = read_pt_from_csv(pt_csv_path)
+    print(f"{len(avail_pt)} to process...")
 
     
     csv_path ="005_ENTROPY_RESULTS_PROCESSPOOL.csv"
@@ -47,7 +46,7 @@ def main():
         for i in tqdm(range(0, len(avail_pt), chunk_size), desc="Batch Processing"):
             batch = avail_pt[i:i+chunk_size]
             with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                futures = [executor.submit(cal_entropy, path) for path in batch]
+                futures = [executor.submit(cal_entropy, os.path.join(BASE_DIR,path)) for path in batch]
 
                 for future in tqdm(as_completed(futures), total=len(futures)):
                     try:
