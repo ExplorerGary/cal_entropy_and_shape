@@ -44,7 +44,7 @@ def read_pt(pt_path):
     return pt_array
 
 
-def to_int_fuct(pt: np.ndarray, scale: float = 1e6) -> np.ndarray:
+def to_int_fuct(pt: np.ndarray, scale: float = 1e8) -> np.ndarray:
     """
     将 float16 np.ndarray 安全地放大为 int32，默认放大倍率为1e8
     使用 float32 进行缩放以避免精度问题。
